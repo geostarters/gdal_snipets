@@ -135,5 +135,5 @@ gdal_translate /home/geostart/file_in.mbtiles /home/geostart/file_out.mbtiles -c
 
 Vertical transformation orthometric to ellipsoidal XYZ Ascii file
 ```cpp
-gdaltransform -s_srs "+proj=longlat +datum=WGS84 +geoidgrids=/home//gdaldata/egm96_15.gtx +no_defs" -t_srs "+proj=longlat +datum=WGS84 +units=m +no_def" < /home/geostart/file.xyz > /home/geostart/file_elip91.xyz
+gdaltransform -s_srs "+proj=longlat +datum=WGS84 +geoidgrids=/home/gdaldata/egm96_15.gtx +no_defs" -t_srs "+proj=longlat +datum=WGS84 +units=m +no_def" < /home/geostart/file.xyz > /home/geostart/file_elip91.xyz
 ```  
