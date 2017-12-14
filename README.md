@@ -39,7 +39,7 @@ gdalwarp -s_srs EPSG:25831 -t_srs EPSG:3857 /home/geostart/file.png /home/geosta
 
 ### gdal_grid
 
-Virtual file with lidar point to Geotiff
+Virtual file with lidar point data to Geotiff
 ```c
 gdal_grid  -of GTiff -ot Float64 -l lidar_cat_v2 /home/geostart/file.vrt /home/geostart/file.tif
 
@@ -47,15 +47,12 @@ gdal_grid  -of GTiff -ot Float64 -l lidar_cat_v2 /home/geostart/file.vrt /home/g
 
 ### ogr2ogr
 
-Create spatial index (*.qix) to shapefiles in batch mode
-```c
-for i in `find *.shp |cut -d '.' -f 1 ` ; do echo ogrinfo -sql "CREATE SPATIAL INDEX ON $i"  $i.shp; done
-```
+
 Convert Shapefile to GeoPackege
 ```c
 ogr2ogr -f GPKG /home/geostart/file.gpkg /home/geostart/file.shp
 ```
-Convert a CSV with WKT geom filed
+Convert  CSV with WKT geom field to GeoJSON
 ```c
 ogr2ogr -f "GeoJson" "file.geojson" "file.csv" -sql "SELECT *, CAST(fieldname as geometry) FROM file"
 ```
@@ -65,36 +62,37 @@ Shapefile to GeoJSON force geometry creation
 ogr2ogr -f "GeoJson" "/home/geostart/file.geojson"  "/home/geostart/file.shp" -nlt POLYGON
 ```
 
-Shapefile to Postgis
+Shapefile to PostGIS
 ```c
 ogr2ogr -overwrite -f "PostgreSQL" -nln public.tableName PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname"
 /home/geostart/file.shp -lco GEOMETRY_NAME=geom  -skipfailures
 ```
 
-Shapefile to Postgis Promote Multipolygon
+Shapefile to PostGIS promote Multipolygon
 ```c
-ogr2ogr -nlt PROMOTE_TO_MULTI -s_srs EPSG:3857 -t_srs EPSG:3857 -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" /home/geostart/file.shp -lco GEOMETRY_NAME=geom -skipfailures
+ogr2ogr -nlt PROMOTE_TO_MULTI  -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" /home/geostart/file.shp -lco GEOMETRY_NAME=geom -skipfailures
 ```
 
-Oracle to Postgis
+Oracle to PostGIS with reprojection
 ```c
 ogr2ogr -s_srs EPSG:25831 -t_srs EPSG:3857 -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" OCI:"oracle_user/oracle_pass@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE)))" -sql "SELECT A.SHAPE SHAPE, B.FIELD1 FIELD2,DELEGACIO,FIELD7,FIELD4,FIELD3 FROM TABLE1.FIELD4 A, TABLE1.FIELD5 B WHERE A.FIELD3=B.F31_PC AND A.TIPO='U'" -skipfailures
 ```
 
-Oracle to Postgis using SQL sentence
+Oracle to PostGIS using SQL sentence
 ```c
-ogr2ogr -s_srs EPSG:25831 -t_srs EPSG:3857 -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" OCI:"oracle_user/oracle_pass@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE)))" -sql "SELECT A.SHAPE SHAPE, B.FIELD1 FIELD2,DELEGACIO,FIELD7,FIELD4,FIELD3, C.FIELD8 FROM TABLE1.FIELD4 A, TABLE1.FIELD5 B, TABLE1.FIELD6 C WHERE A.FIELD3=B.F31_PC AND A.FIELD3 = C.F31_PC AND B.FIELD7=900" -skipfailures
+ogr2ogr  -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" OCI:"oracle_user/oracle_pass@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE)))" -sql "SELECT A.SHAPE SHAPE, B.FIELD1 FIELD2,DELEGACIO,FIELD7,FIELD4,FIELD3, C.FIELD8 FROM TABLE1.FIELD4 A, TABLE1.FIELD5 B, TABLE1.FIELD6 C WHERE A.FIELD3=B.F31_PC AND A.FIELD3 = C.F31_PC AND B.FIELD7=900" -skipfailures
 ```
-Shapefile to Oracle
+Shapefile to Oracle with reprojection
 ```c
 ogr2ogr -s_srs EPSG:25831 -t_srs EPSG:25831 -f OCI OCI:"USER/PASSWORD@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE)))" "/home/geostart/file.shp"
 ```
 Oracle to GeoJSON
 ```c
-ogr2ogr -s_srs EPSG:23031 -t_srs EPSG:23031 -append -f "GeoJSON" /home/geostart/file.geojson OCI:"USER/PASSWORD@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE))):PRG.PCIVIL_PAP" -skipfailures -mapFieldType All
+ogr2ogr  -append -f "GeoJSON" /home/geostart/file.geojson OCI:"USER/PASSWORD@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE))):PRG.PCIVIL_PAP" -skipfailures -mapFieldType All
 ```
 
-Convert XlSX to CVS and join the CSV and Shapefile to create a GeoPackage
+Step 1: Convert XLSX to CVS
+Step 2: Join CSV and Shapefile to create a GeoPackage
 ```c
 ogr2ogr -f CSV /home/geostart/file.csv /home/geostart/file.xlsx
 ogr2ogr -f GPKG -sql "select name_shapefile.*, joincsv.* from name_shapefile left join 'joincsv.csv'.joincsv on name_shapefile.fieldID = joincsv.fieldID" /home/geostart/file.gpkg /home/geostart/file.shp -skipFailures
@@ -102,11 +100,11 @@ ogr2ogr -f GPKG -sql "select name_shapefile.*, joincsv.* from name_shapefile lef
 
 ### gdal_translate
 
-MBTILES to tiff
+MBTILES to GeoTiff
 ```c
 gdal_translate -oo ZOOM_LEVEL=14  /home/geostart/file.mbtiles  /home/geostart/file.tif
 ```  
-XYZ file to GeoTiff
+XYZ ASCII file to GeoTiff
 ```c
 gdal_translate -of GTiff   /home/geostart/file.xyz  /home/geostart/file.tif
 ```
