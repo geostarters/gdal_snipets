@@ -92,6 +92,7 @@ ogr2ogr  -append -f "GeoJSON" /home/geostart/file.geojson OCI:"USER/PASSWORD@(DE
 ```
 
 Step 1: Convert XLSX to CVS
+
 Step 2: Join CSV and Shapefile to create a GeoPackage
 ```c
 ogr2ogr -f CSV /home/geostart/file.csv /home/geostart/file.xlsx
