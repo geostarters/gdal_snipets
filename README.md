@@ -23,6 +23,11 @@ Create virtual raster from a folder containing Geotiff files
 gdalbuildvrt file.vrt folder_name/*.tif
 ```
 
+Create virtual raster from a folder containing PNG World files
+```cpp
+gdalbuildvrt file.vrt folder_name/*.png
+```
+
 ### gdal2tiles
 
 Create tiles to disk from GeoTiff file. Zoom level 6 to 18
@@ -35,6 +40,11 @@ gdal2tiles.py file.tif floder_name  -z 6-18 -r antialias
 PNG to GeoTiff and reprojection UTM 31N-ETRS89 to PseudoMercator (Google)
 ```cpp
 gdalwarp -s_srs EPSG:25831 -t_srs EPSG:3857 /home/geostart/file.png /home/geostart/file.tif
+```
+
+Convert a Virtual Raster (.vrt) file to another format 
+```cpp
+gdalwarp -of GTiff source.vrt output.tif
 ```
 
 ### gdal_grid
