@@ -136,6 +136,11 @@ gdal_translate  /home/geostart/file.tif  /home/geostart/file.mbtiles    -co NAME
 
 gdaladdo -r average /home/geostart/file.mbtiles 2 4 8 16
 ```
+```cpp
+gdal_translate  /home/geostart/file.tif  /home/geostart/file.mbtiles    -co NAME=name_file -co ZOOM_LEVEL_STRATEGY=UPPER -co TILE_FORMAT=PNG -co RESAMPLING=NEAREST  -co WRITE_BOUNDS=YES -of MBTILES                             
+
+gdaladdo -r average /home/geostart/file.mbtiles 2 4 8 16
+```
 MBTILES to MBTILES cropping by bounding box and zoom level
 ```cpp
 gdal_translate /home/geostart/file_in.mbtiles /home/geostart/file_out.mbtiles -co TILE_FORMAT=JPEG -co QUALITY=85 -of MBTILES -oo MINX=164729 -oo MINY=5167665 -oo MAXX=201866 -oo MAXY=5185641 -oo ZOOM_LEVEL=17 -co WRITE_BOUNDS=YES
