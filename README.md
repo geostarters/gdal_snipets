@@ -88,6 +88,11 @@ Shapefile to PostGIS promote Multipolygon
 ogr2ogr -nlt PROMOTE_TO_MULTI  -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" /home/geostart/file.shp -lco GEOMETRY_NAME=geom -skipfailures
 ```
 
+Postgis to PostGIS with SQL
+```cpp
+ogr2ogr -overwrite -f "PostgreSQL"  --config PG_USE_COPY YES -nln table_name  -lco GEOMETRY_NAME=geom PG:"host=127.0.0.1 user=user_postgres password=XXXXXX dbname=output_database_name"  PG:"host=127.0.0.2 user=user_postgres password=XXXXXX dbname=input_database_name" -sql "SELECT * from table_name"
+```
+
 Oracle to PostGIS with reprojection
 ```cpp
 ogr2ogr -s_srs EPSG:25831 -t_srs EPSG:3857 -overwrite -f "PostgreSQL" -nln public.table_name PG:"host=127.0.0.1 user=postgres password=xxxxxx dbname=postgres_dbname" OCI:"oracle_user/oracle_pass@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521)))(CONNECT_DATA = (SID =SID_ORACLE_MACHINE)))" -sql "SELECT A.SHAPE SHAPE, B.FIELD1 FIELD2,DELEGACIO,FIELD7,FIELD4,FIELD3 FROM TABLE1.FIELD4 A, TABLE1.FIELD5 B WHERE A.FIELD3=B.F31_PC AND A.TIPO='U'" -skipfailures
