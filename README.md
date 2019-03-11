@@ -63,6 +63,11 @@ gdaldem hillshade /home/geostart/filedem.tif   /home/geostart/filehillshade.tif
 
 ### ogr2ogr
 
+Convert Shapefile to MbTiles (vector-tiles)  GDAL>= 2.4
+```cpp
+ogr2ogr -f MVT output.mbtiles input.shp -s_srs EPSG:25831 -t_srs EPSG:3857 -dsco MAXZOOM=20 -dsco MINZOOM=12 -dsco FORMAT=MBTILES -dsco MAX_SIZE=1500000 -dsco NAME=output_name_dataset -lco NAME=output_name_layer -lco MAXZOOM=20 -lco MINZOOM=12
+```
+
 Convert Shapefile to GeoPackege
 ```cpp
 ogr2ogr -f GPKG /home/geostart/file.gpkg /home/geostart/file.shp
