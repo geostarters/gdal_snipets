@@ -1,4 +1,4 @@
-# GDAL Snippets
+# GDAL Cli Snippets
 
 #### Useful examples working with [GDAL](http://www.gdal.org/)
 
@@ -56,7 +56,7 @@ gdal_grid  -of GTiff -ot Float64 -l point_layer /home/geostart/file.vrt /home/ge
 
 ### gdaldem
 
-Create a hillsahe from a dem Geotiff
+Create a hillshade from a dem Geotiff
 ```bash
 gdaldem hillshade /home/geostart/filedem.tif   /home/geostart/filehillshade.tif
 ```
@@ -138,6 +138,10 @@ ogr2ogr  -append -f "GeoJSON" /home/geostart/file.geojson OCI:"USER/PASSWORD@(DE
 
 Step 1: Convert XLSX to CVS
 
+```bash
+ogr2ogr -f CSV /home/geostart/file.csv /home/geostart/file.xlsx
+
+```
 Step 2: Join CSV and Shapefile to create a GeoPackage
 ```bash
 ogr2ogr -f CSV /home/geostart/file.csv /home/geostart/file.xlsx
@@ -176,7 +180,7 @@ gdal_translate  /home/geostart/file.tif  /home/geostart/file.mbtiles    -co NAME
 gdaladdo -r average /home/geostart/file.mbtiles 2 4 8 16
 ```
 
-Per generar una piràmide sense compressió ni interpolació de colors entre els overviews:
+Tif to Raster MBTiles :
 ```bash
 gdal_translate  /home/geostart/file.tif  /home/geostart/file.mbtiles    -co NAME=name_file -co ZOOM_LEVEL_STRATEGY=UPPER -co TILE_FORMAT=PNG -co RESAMPLING=NEAREST  -co WRITE_BOUNDS=YES -of MBTILES                             
 
@@ -193,3 +197,21 @@ Vertical transformation orthometric to ellipsoidal XYZ Ascii file
 ```bash
 gdaltransform -s_srs "+proj=longlat +datum=WGS84 +geoidgrids=/home/gdaldata/egm96_15.gtx +no_defs" -t_srs "+proj=longlat +datum=WGS84 +units=m +no_def" < /home/geostart/file.xyz > /home/geostart/file_elip91.xyz
 ```  
+
+
+## Other resources
+
+
+https://www.bostongis.com/?content_name=ogr_cheatsheet#41
+
+https://gdal.org/tutorials/
+
+https://geoserver.geo-solutions.it/educational/en/raster_data/processing.html
+
+https://developers.planet.com/planetschool/getting-started-with-gdal/
+
+https://github.com/dwtkns/gdal-cheat-sheet
+
+https://github.com/USGS-Astrogeology/GDAL_scripts
+
+
